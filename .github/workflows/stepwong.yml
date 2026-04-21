@@ -1,0 +1,23 @@
+name: StepWong Auto Run
+on:
+  workflow_dispatch: # 必须有这行，才能手动触发
+  schedule:
+    -  cron: '0 8 * * *' # 每天早上8点自动运行
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+      - name: 运行刷步脚本
+        env:
+          USER: ${{ secrets.USER }}
+          PWD: ${{ secrets.PWD }}
+          MIN_STEP: ${{ secrets.MIN_STEP }}
+          MAX_STEP: ${{ secrets.MAX_STEP }}
+        run: python main.py
